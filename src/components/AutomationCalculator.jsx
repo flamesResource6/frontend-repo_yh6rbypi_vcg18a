@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import CalculatorCard from './CalculatorCard';
 
 export default function AutomationCalculator() {
@@ -17,14 +17,46 @@ export default function AutomationCalculator() {
     const monthlySavings = (weeklyLaborSavings + weeklyErrorSavings) * 4.33;
     const annualSavings = monthlySavings * 12;
 
-    const platformCost = 4000; // monthly platform + orchestration
+    const platformCost = 4000; // monthly
     const roiPct = Math.min(100, Math.max(0, (monthlySavings / platformCost) * 100));
-    const paybackMonths = platformCost > 0 ? Math.max(0.5, platformCost / monthlySavings) : 0;
+    const paybackMonths = platformCost > 0 && monthlySavings > 0 ? Math.max(0.5, platformCost / monthlySavings) : Infinity;
 
     const headline = `Automate ~${Math.round(hoursAutomated)} hrs/week and cut rework/errors`;
 
-    return { savingsPct: roiPct, annualSavings, paybackMonths, headline };
+    return { savingsPct: roiPct, annualSavings, paybackMonths, headline, context: {
+      hoursPerWeek, avgHourlyCost, automationPct, errorCostPerWeek, automationErrorReduction,
+      hoursAutomated, weeklyLaborSavings, weeklyErrorSavings, monthlySavings, platformCost
+    }};
   }, [hoursPerWeek, avgHourlyCost, automationPct, errorCostPerWeek, automationErrorReduction]);
+
+  const handleExport = useCallback(() => {
+    const result = compute();
+    const rows = [
+      ['Metric', 'Value'],
+      ['Team hours/week', hoursPerWeek],
+      ['Average hourly cost ($)', avgHourlyCost],
+      ['Automation coverage (%)', automationPct + '%'],
+      ['Weekly error/rework cost ($)', errorCostPerWeek],
+      ['Error reduction with automation (%)', automationErrorReduction + '%'],
+      ['Hours automated (calc)', Math.round(result.context.hoursAutomated)],
+      ['Weekly labor savings', result.context.weeklyLaborSavings.toFixed(2)],
+      ['Weekly error savings', result.context.weeklyErrorSavings.toFixed(2)],
+      ['Monthly savings', result.context.monthlySavings.toFixed(2)],
+      ['Platform cost (monthly)', result.context.platformCost],
+      ['ROI (%)', Math.round(result.savingsPct) + '%'],
+      ['Annual savings', result.annualSavings.toFixed(2)],
+      ['Payback (months)', Number.isFinite(result.paybackMonths) ? result.paybackMonths.toFixed(2) : 'N/A'],
+    ];
+
+    const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'automation-roi.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [compute, hoursPerWeek, avgHourlyCost, automationPct, errorCostPerWeek, automationErrorReduction]);
 
   const inputs = [
     { key: 'hoursPerWeek', label: 'Team hours spent on process/week', defaultValue: hoursPerWeek, onChange: setHoursPerWeek, step: 10, min: 0 },
@@ -40,6 +72,8 @@ export default function AutomationCalculator() {
       description="Estimate labor savings and error reduction from automating repetitive workflows."
       inputs={inputs}
       compute={compute}
+      theme="light"
+      onExport={handleExport}
     />
   );
 }
