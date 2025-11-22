@@ -2,10 +2,14 @@ import Spline from '@splinetool/react-spline';
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden min-h-[60vh] flex items-center justify-center bg-transparent">
+    <section className="relative overflow-hidden min-h-[60vh] flex items-center justify-center bg-gradient-to-b from-sky-50 to-white">
+      {/* Scene (kept, but we'll softly brighten it) */}
       <div className="absolute inset-0">
         <Spline scene="https://prod.spline.design/4cHQr84zOGAHOehh/scene.splinecode" style={{ width: '100%', height: '100%' }} />
       </div>
+
+      {/* Soft brightening layer so the hero never looks black */}
+      <div className="absolute inset-0 bg-white/60" />
 
       {/* Floating light circles across the screen for a soft, airy feel */}
       <style>{`
@@ -25,9 +29,17 @@ export default function Hero() {
         <div className="inline-block px-4 py-1 rounded-full bg-white/70 text-slate-700 text-sm mb-4 border border-white">
           AI Voice Agent & Automation
         </div>
-        <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-slate-900">
-          ROI Calculators
-        </h1>
+
+        {/* Decorative purple glow behind the heading (restored) */}
+        <div className="relative inline-block">
+          <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center">
+            <div className="w-40 h-40 rounded-full bg-purple-400/25 blur-3xl" />
+          </div>
+          <h1 className="relative text-4xl sm:text-6xl font-extrabold tracking-tight text-slate-900">
+            ROI Calculators
+          </h1>
+        </div>
+
         <p className="mt-4 text-base sm:text-lg text-slate-700 max-w-2xl mx-auto">
           Estimate the impact of an AI voice agent and process automation on your bottom line. Adjust inputs and see ROI instantly — with clear visuals.
         </p>
