@@ -47,7 +47,7 @@ export default function CalculatorCard({ title, description, inputs, compute, th
           {onExport && (
             <button
               onClick={onExport}
-              className="shrink-0 inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 transition"
+              className={`shrink-0 inline-flex items-center gap-2 px-3 py-2 rounded-lg border transition ${isLight ? 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50' : 'border-white/20 bg-slate-900/40 text-white hover:bg-slate-900/60'}`}
               aria-label="Export CSV"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

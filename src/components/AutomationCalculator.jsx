@@ -48,7 +48,7 @@ export default function AutomationCalculator() {
       ['Payback (months)', Number.isFinite(result.paybackMonths) ? result.paybackMonths.toFixed(2) : 'N/A'],
     ];
 
-    const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+    const csv = rows.map(r => r.map(v => `"${String(v).replace(/\"/g, '\"\"')}"`).join(',')).join('\n');
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -72,7 +72,7 @@ export default function AutomationCalculator() {
       description="Estimate labor savings and error reduction from automating repetitive workflows."
       inputs={inputs}
       compute={compute}
-      theme="light"
+      theme="dark"
       onExport={handleExport}
     />
   );

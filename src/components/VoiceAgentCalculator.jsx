@@ -80,7 +80,7 @@ export default function VoiceAgentCalculator() {
       description="Estimate revenue recovered from missed calls and savings from automated call handling."
       inputs={inputs}
       compute={compute}
-      theme="light"
+      theme="dark"
       onExport={handleExport}
     />
   );
