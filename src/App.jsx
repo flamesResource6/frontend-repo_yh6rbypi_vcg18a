@@ -4,7 +4,7 @@ import AutomationCalculator from './components/AutomationCalculator';
 
 function App() {
   return (
-    <div className="min-h-screen bg-white text-slate-900">
+    <div className="min-h-screen bg-slate-950 text-slate-100">
       <Hero />
 
       <main className="relative z-10 -mt-10">
@@ -14,7 +14,7 @@ function App() {
             <AutomationCalculator />
           </section>
 
-          <section className="mt-10 text-center text-slate-500 text-sm">
+          <section className="mt-10 text-center text-slate-400 text-sm">
             Numbers are directional estimates. Adjust inputs to match your context.
           </section>
         </div>
